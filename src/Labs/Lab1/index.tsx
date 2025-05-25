@@ -281,8 +281,10 @@ p2.jpg" />
             Please 
             <a href="https://www.lipsum.com" id="wd-lipsum">click here</a>
             to get dummy text<br/>
-            <a href="https://github.com/yourUsername/kambaz-react-web-app" id="wd-github">My GitHub Repository</a>
+            <a href="https://github.com/Cat97-97/kambaz-react-web-app" id="wd-github">My GitHub Repository</a>
         </div>
       </div>
     );
   }
+
+  
