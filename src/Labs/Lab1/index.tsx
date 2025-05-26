@@ -212,6 +212,9 @@ p2.jpg" />
             <input type="date"
               value="2000-01-21"
               id="wd-text-fields-dob"/><br/>
+            
+            <label htmlFor="wd-text-fields-file">File Upload:</label>
+            <input type="file" id="wd-text-fields-file" /><br/>
         </form>
 
 
