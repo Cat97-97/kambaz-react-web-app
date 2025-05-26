@@ -1,30 +1,37 @@
-import { Link, Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router";
+import CourseNavigation from "./Navigation";
+import Home from "./Home";
 import Modules from "./Modules";
+import Assignments from "./Assignments";
+import AssignmentEditor from "./Assignments/Editor";
 
 export default function Courses() {
+  const { cid } = useParams();
+  
   return (
     <div id="wd-courses">
-      <table width="100%">
-        <tbody>
-          <tr>
-            <td valign="top">
-              <ul>
-                <li><Link to="/Kambaz/Courses/Home">Home</Link></li>
-                <li><Link to="/Kambaz/Courses/Modules">Modules</Link></li>
-                <li><Link to="/Kambaz/Courses/Assignments">Assignments</Link></li>
-              </ul>
-            </td>
-            <td valign="top">
-              <Routes>
-                <Route path="/" element={<Navigate to="Home" />} />
-                <Route path="Home" element={<h3>Home</h3>} />
-                <Route path="Modules" element={<Modules />} />
-                <Route path="Assignments" element={<h3>Assignments</h3>} />
-                <Route path="Assignments/:aid" element={<h3>Assignment Editor</h3>} />
-              </Routes>
-            </td>
-          </tr>
-        </tbody>
+      <h2>Course {cid}</h2>
+      <hr />
+      <table>
+        <tr>
+          <td valign="top">
+            <CourseNavigation />
+          </td>
+          <td valign="top">
+            <Routes>
+              <Route path="/" element={<Navigate to="Home" />} />
+              <Route path="Home" element={<Home />} />
+              <Route path="Modules" element={<Modules />} />
+              <Route path="Assignments" element={<Assignments />} />
+              <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+              <Route path="People" element={<h2>People</h2>} />
+              <Route path="Piazza" element={<h2>Piazza</h2>} />
+              <Route path="Zoom" element={<h2>Zoom</h2>} />
+              <Route path="Quizzes" element={<h2>Quizzes</h2>} />
+              <Route path="Grades" element={<h2>Grades</h2>} />
+            </Routes>
+          </td>
+        </tr>
       </table>
     </div>
   );
