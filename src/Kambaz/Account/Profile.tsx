@@ -3,9 +3,9 @@ import { Form } from "react-bootstrap";
 
 export default function Profile() {
   return (
-    <div id="wd-profile-screen" className="container-fluid d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
-      <div style={{ width: "400px" }}>
-        <h1 className="mb-4">Profile</h1>
+    <div id="wd-profile-screen" className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", paddingTop: "60px" }}>
+      <div className="card p-4" style={{ width: "400px", maxWidth: "90%" }}>
+        <h1 className="mb-4 text-center">Profile</h1>
         <Form>
           <Form.Control 
             defaultValue="alice" 

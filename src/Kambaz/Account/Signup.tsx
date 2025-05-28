@@ -3,9 +3,9 @@ import { Form } from "react-bootstrap";
 
 export default function Signup() {
   return (
-    <div id="wd-signup-screen" className="container-fluid d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
-      <div style={{ width: "400px" }}>
-        <h1 className="mb-4">Signup</h1>
+    <div id="wd-signup-screen" className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", paddingTop: "60px" }}>
+      <div className="card p-4" style={{ width: "400px", maxWidth: "90%" }}>
+        <h1 className="mb-4 text-center">Signup</h1>
         <Form>
           <Form.Control 
             placeholder="username" 
