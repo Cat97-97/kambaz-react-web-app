@@ -1,10 +1,11 @@
 import Labs from "./Labs";
 import Kambaz from "./Kambaz";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { HashRouter, Route, Routes, Navigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div>
         <Routes>
           <Route path="/" element={<Navigate to="Kambaz" />} />
@@ -12,6 +13,6 @@ export default function App() {
           <Route path="/Kambaz/*" element={<Kambaz />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
