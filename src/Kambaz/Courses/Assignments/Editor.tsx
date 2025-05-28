@@ -1,7 +1,20 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { Form, Button, Row, Col, Badge } from "react-bootstrap";
+import { useState } from "react";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
+  const [assignedTo, setAssignedTo] = useState(["Everyone"]);
+  const [showAssignDropdown, setShowAssignDropdown] = useState(false);
+  
+  // Sample students from People table
+  const availableAssignees = [
+    "Everyone",
+    "Tony Stark",
+    "Bruce Wayne", 
+    "Steve Rogers",
+    "Natasha Romanoff"
+  ];
   
   // Course-specific assignment details
   const courseAssignments: { [key: string]: { [key: string]: any } } = {
@@ -45,127 +58,261 @@ export default function AssignmentEditor() {
   const defaultAssignment = { name: "Assignment", description: "Complete the assignment as specified in the course materials." };
   const assignment = courseAssignments[cid || ""]?.[aid || ""] || defaultAssignment;
 
+  const handleAddAssignee = (assignee: string) => {
+    if (assignee === "Everyone") {
+      setAssignedTo(["Everyone"]);
+    } else {
+      const newAssignees = assignedTo.filter(a => a !== "Everyone");
+      if (!newAssignees.includes(assignee)) {
+        newAssignees.push(assignee);
+      }
+      setAssignedTo(newAssignees);
+    }
+    setShowAssignDropdown(false);
+  };
+
+  const handleRemoveAssignee = (assignee: string) => {
+    const newAssignees = assignedTo.filter(a => a !== assignee);
+    if (newAssignees.length === 0) {
+      setAssignedTo(["Everyone"]);
+    } else {
+      setAssignedTo(newAssignees);
+    }
+  };
+
   return (
-    <div id="wd-assignments-editor">
-      <label htmlFor="wd-name">Assignment Name</label>
-      <input id="wd-name" value={assignment.name} /><br /><br />
-      
-      <textarea id="wd-description" cols={50} rows={8} defaultValue={assignment.description} />
-      <br />
-      
-      <table>
-        <tr>
-          <td align="right" valign="top">
+    <div id="wd-assignments-editor" className="container mt-4">
+      <Form>
+        <Form.Group className="mb-3" controlId="wd-name">
+          <Form.Label className="fw-bold">Assignment Name</Form.Label>
+          <Form.Control 
+            type="text" 
+            defaultValue={assignment.name}
+            size="lg"
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-4" controlId="wd-description">
+          <Form.Control 
+            as="textarea" 
+            rows={8} 
+            defaultValue={assignment.description}
+            className="form-control-lg"
+          />
+        </Form.Group>
+
+        <Row className="mb-3">
+          <Form.Label column sm={3} className="text-end">
             <label htmlFor="wd-points">Points</label>
-          </td>
-          <td>
-            <input id="wd-points" value={100} />
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
+          </Form.Label>
+          <Col sm={9}>
+            <Form.Control 
+              id="wd-points" 
+              type="number"
+              defaultValue={100}
+              style={{ width: "150px" }}
+            />
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Form.Label column sm={3} className="text-end">
             <label htmlFor="wd-group">Assignment Group</label>
-          </td>
-          <td>
-            <select id="wd-group">
+          </Form.Label>
+          <Col sm={9}>
+            <Form.Select id="wd-group" style={{ width: "250px" }}>
               <option value="ASSIGNMENTS">ASSIGNMENTS</option>
               <option value="QUIZZES">QUIZZES</option>
               <option value="EXAMS">EXAMS</option>
               <option value="PROJECT">PROJECT</option>
-            </select>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
+            </Form.Select>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Form.Label column sm={3} className="text-end">
             <label htmlFor="wd-display-grade-as">Display Grade as</label>
-          </td>
-          <td>
-            <select id="wd-display-grade-as">
+          </Form.Label>
+          <Col sm={9}>
+            <Form.Select id="wd-display-grade-as" style={{ width: "250px" }}>
               <option value="Percentage">Percentage</option>
               <option value="Points">Points</option>
               <option value="Letter">Letter Grade</option>
               <option value="GPA">GPA Scale</option>
-            </select>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
+            </Form.Select>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Form.Label column sm={3} className="text-end">
             <label htmlFor="wd-submission-type">Submission Type</label>
-          </td>
-          <td>
-            <select id="wd-submission-type">
-              <option value="Online">Online</option>
-              <option value="Paper">Paper</option>
-              <option value="External Tool">External Tool</option>
-            </select>
-          </td>
-        </tr>
+          </Form.Label>
+          <Col sm={9}>
+            <div className="border rounded p-3">
+              <Form.Select id="wd-submission-type" className="mb-3" style={{ width: "250px" }}>
+                <option value="Online">Online</option>
+                <option value="Paper">Paper</option>
+                <option value="External Tool">External Tool</option>
+              </Form.Select>
+
+              <div>
+                <div className="fw-bold mb-2">Online Entry Options</div>
+                <Form.Check 
+                  type="checkbox"
+                  id="wd-text-entry"
+                  label="Text Entry"
+                  className="mb-2"
+                />
+                <Form.Check 
+                  type="checkbox"
+                  id="wd-website-url"
+                  label="Website URL"
+                  defaultChecked
+                  className="mb-2"
+                />
+                <Form.Check 
+                  type="checkbox"
+                  id="wd-media-recordings"
+                  label="Media Recordings"
+                  className="mb-2"
+                />
+                <Form.Check 
+                  type="checkbox"
+                  id="wd-student-annotation"
+                  label="Student Annotation"
+                  className="mb-2"
+                />
+                <Form.Check 
+                  type="checkbox"
+                  id="wd-file-upload"
+                  label="File Uploads"
+                />
+              </div>
+            </div>
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Form.Label column sm={3} className="text-end fw-bold">
+            Assign
+          </Form.Label>
+          <Col sm={9}>
+            <div className="border rounded p-3">
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="wd-assign-to" className="fw-bold">Assign to</Form.Label>
+                
+                <div className="border rounded p-2 mb-3" style={{ minHeight: "40px", backgroundColor: "#f8f9fa" }}>
+                  {assignedTo.map((person, index) => (
+                    <Badge 
+                      key={index} 
+                      bg="light" 
+                      text="dark" 
+                      className="me-2 mb-1 p-2 border"
+                      style={{ fontSize: "14px" }}
+                    >
+                      {person}
+                      <span 
+                        className="ms-2" 
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleRemoveAssignee(person)}
+                      >
+                        ×
+                      </span>
+                    </Badge>
+                  ))}
+                </div>
+
+                <div className="position-relative">
+                  <Form.Control 
+                    placeholder="Start typing to search students..."
+                    onFocus={() => setShowAssignDropdown(true)}
+                    onBlur={() => setTimeout(() => setShowAssignDropdown(false), 200)}
+                  />
+                  {showAssignDropdown && (
+                    <div className="position-absolute w-100 border rounded shadow-sm bg-white" style={{ top: "100%", zIndex: 1000 }}>
+                      {availableAssignees.map((assignee, index) => (
+                        <div 
+                          key={index}
+                          className="p-2 border-bottom hover-bg-light"
+                          style={{ cursor: "pointer" }}
+                          onMouseDown={() => handleAddAssignee(assignee)}
+                        >
+                          {assignee}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-muted small mt-3">
+                  The assignment is available online
+                </div>
+                <Form.Text className="text-muted">
+                  Submit a link to the landing page of your Web application running on Netlify.
+                </Form.Text>
+                <br />
+                <Form.Text className="text-muted">
+                  The landing page should include the following:
+                </Form.Text>
+                <ul className="text-muted small mt-2">
+                  <li>Your full name and section</li>
+                  <li>Links to each of the lab assignments</li>
+                  <li>Link to the Kambaz application</li>
+                  <li>Links to all relevant source code repositories</li>
+                </ul>
+                <Form.Text className="text-muted">
+                  The Kambaz application should include a link to navigate back to the landing page.
+                </Form.Text>
+              </Form.Group>
+
+              <Row>
+                <Col>
+                  <Form.Group>
+                    <Form.Label htmlFor="wd-due-date" className="fw-bold">Due</Form.Label>
+                    <Form.Control 
+                      type="datetime-local"
+                      id="wd-due-date"
+                      defaultValue="2024-05-13T23:59"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row className="mt-3">
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label htmlFor="wd-available-from" className="fw-bold">Available from</Form.Label>
+                    <Form.Control 
+                      type="datetime-local"
+                      id="wd-available-from"
+                      defaultValue="2024-05-06T00:00"
+                    />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group>
+                    <Form.Label htmlFor="wd-available-until" className="fw-bold">Until</Form.Label>
+                    <Form.Control 
+                      type="datetime-local"
+                      id="wd-available-until"
+                      defaultValue="2024-05-20T23:59"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
+          </Col>
+        </Row>
+
+        <hr className="my-4" />
         
-        <tr>
-          <td></td>
-          <td>
-            <label>Online Entry Options</label><br/>
-            
-            <input type="checkbox" id="wd-text-entry" />
-            <label htmlFor="wd-text-entry">Text Entry</label><br/>
-            
-            <input type="checkbox" id="wd-website-url" defaultChecked />
-            <label htmlFor="wd-website-url">Website URL</label><br/>
-            
-            <input type="checkbox" id="wd-media-recordings" />
-            <label htmlFor="wd-media-recordings">Media Recordings</label><br/>
-            
-            <input type="checkbox" id="wd-student-annotation" />
-            <label htmlFor="wd-student-annotation">Student Annotation</label><br/>
-            
-            <input type="checkbox" id="wd-file-upload" />
-            <label htmlFor="wd-file-upload">File Uploads</label>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-assign-to">Assign to</label>
-          </td>
-          <td>
-            <input id="wd-assign-to" value="Everyone" />
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-due-date">Due</label>
-          </td>
-          <td>
-            <input type="date" id="wd-due-date" defaultValue="2024-05-13" />
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-available-from">Available from</label>
-          </td>
-          <td>
-            <input type="date" id="wd-available-from" defaultValue="2024-05-06" />
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-available-until">Until</label>
-          </td>
-          <td>
-            <input type="date" id="wd-available-until" defaultValue="2024-05-20" />
-          </td>
-        </tr>
-      </table>
-      
-      <hr />
-      
-      <button>Cancel</button> <button>Save</button>
+        <div className="d-flex justify-content-end">
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">
+            Cancel
+          </Link>
+          <Button variant="danger">Save</Button>
+        </div>
+      </Form>
     </div>
   );
 }
