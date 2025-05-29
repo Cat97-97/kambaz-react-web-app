@@ -1,31 +1,16 @@
-# Build settings
+# netlify.toml
 [build]
-  # Directory to change to before starting a build
-  base = ""
-  # Directory that contains the deploy-ready HTML files and assets
   publish = "dist"
-  # Build command
   command = "npm run build"
 
-# Production context
-[context.production]
-  environment = { NODE_ENV = "production" }
+[build.environment]
+  NODE_VERSION = "18"
 
-# Deploy Preview context
-[context.deploy-preview]
-  environment = { NODE_ENV = "production" }
-
-# Branch deploy context
-[context.branch-deploy]
-  environment = { NODE_ENV = "production" }
-
-# Redirects for SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Headers for better performance
 [[headers]]
   for = "/*"
   [headers.values]

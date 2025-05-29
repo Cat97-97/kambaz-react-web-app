@@ -8,14 +8,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    // Ensure assets are handled correctly
     assetsDir: 'assets',
-    // Rollup options for better compatibility
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-      },
-    },
   },
   server: {
     port: 3000,
